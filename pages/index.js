@@ -1,5 +1,5 @@
 // Main entry point of your app
-import {useState} from 'react'
+import { useState } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
@@ -8,14 +8,25 @@ const Home = () => {
   const [favoriteChannels, setFavoriteChannels] = useState([])
 
   // Actions
-  const addStreamChannel = event => {
+  const addStreamChannel = async event => {
     // Prevent the page from redirecting
     event.preventDefault()
 
-    const {value} = event.target.elements.name
+    const { value } = event.target.elements.name
 
-    if(value){
-      console.log('Input: ', value)
+    if (value) {
+
+      // Call Twitch Search API
+      const path = `https://${window.location.hostname}`
+
+
+      const response = await fetch(`${path}/api/twitch`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ data: value })
+      })
       setFavoriteChannels(prevState => [...prevState, value])
       event.target.elements.name.value = ""
     }
