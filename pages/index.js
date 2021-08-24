@@ -19,7 +19,6 @@ const Home = () => {
       // Call Twitch Search API
       const path = `https://${window.location.hostname}`
 
-
       const response = await fetch(`${path}/api/twitch`, {
         method: 'POST',
         headers: {
@@ -27,6 +26,10 @@ const Home = () => {
         },
         body: JSON.stringify({ data: value })
       })
+
+      const json = await response.json()
+ 
+ 
       setFavoriteChannels(prevState => [...prevState, value])
       event.target.elements.name.value = ""
     }
