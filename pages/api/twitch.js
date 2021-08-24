@@ -10,3 +10,20 @@ export default async (req, res) => {
     res.status(500).send()
   }
 }
+
+//Actions
+const getTwitchAccesToken = async () => {
+  console.log('GETTING ACCES TOKEN...')
+
+  const path = `https://id.twitch.tv/oauth2/token?client_id=${porcess.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_SECRET_ID}&grant_type=client_credentials`
+
+  const response = await fetch(path, {
+    method: 'POST'
+  })
+
+  if (response) {
+    const json = await response.json()
+    return json.access_token
+  }
+}
+
