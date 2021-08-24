@@ -3,17 +3,26 @@ import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
 const Home = () => {
+  // Actions
+
+  const addStreamChannel = event => {
+    // Prevent the page from redirecting
+    event.preventDefault()
+
+    const {value} = event.target.elements.name
+  }
 
   //Render methods
   const renderForm = () => {
     return (
       <div className={styles.formContainer}>
-        <form>
+        <form onSubmit={addStreamChannel}>
           <input id='name' placeholder='Twitch Channel Name' type='text' required />
           <button type='sumbit'>Add Streamer</button>
         </form>
 
-      </div>)
+      </div>
+    )
   }
   return (
     <div className={styles.container}>
