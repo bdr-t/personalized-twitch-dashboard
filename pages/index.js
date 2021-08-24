@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import StreamerGrid from "../components/StreamerGrid"
 
 const Home = () => {
   //State
@@ -29,7 +30,7 @@ const Home = () => {
 
       const json = await response.json()
  
- 
+
       setFavoriteChannels(prevState => [...prevState, value])
       event.target.elements.name.value = ""
     }
@@ -55,7 +56,7 @@ const Home = () => {
       </Head>
       <div className={styles.inputContainer}>
         {renderForm()}
-        <div>{favoriteChannels.join(', ')}</div>
+        <StreamerGrid/>
       </div>
     </div>
   )
