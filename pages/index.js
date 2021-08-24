@@ -1,5 +1,5 @@
 // Main entry point of your app
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import StreamerGrid from "../components/StreamerGrid"
@@ -8,6 +8,10 @@ const Home = () => {
   //State
   const [favoriteChannels, setFavoriteChannels] = useState([])
 
+
+  useEffect(()=>{
+    console.log(favoriteChannels)
+  },[favoriteChannels])
   // Actions
   const addStreamChannel = async event => {
     // Prevent the page from redirecting
@@ -29,9 +33,12 @@ const Home = () => {
       })
 
       const json = await response.json()
+
+     
  
 
-      setFavoriteChannels(prevState => [...prevState, value])
+      setFavoriteChannels(prevState => [...prevState, json.channelData])
+
       event.target.elements.name.value = ""
     }
   }
@@ -56,7 +63,7 @@ const Home = () => {
       </Head>
       <div className={styles.inputContainer}>
         {renderForm()}
-        <StreamerGrid/>
+        <StreamerGrid channels={favoriteChannels}/>
       </div>
     </div>
   )

@@ -5,9 +5,7 @@ export default async (req, res) => {
       const { data } = req.body
       const channelData = await getTwitchChannel(data)
       if (channelData) {
-        console.log("CHANNEL DATA: ", channelData)
         res.status(200).json({ channelData })
-
       }
       res.status(404).send()
     }
@@ -19,8 +17,6 @@ export default async (req, res) => {
 
 //Actions
 const getTwitchAccesToken = async () => {
-  console.log('GETTING ACCES TOKEN...')
-
   const path = `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_SECRET_ID}&grant_type=client_credentials`
 
   const response = await fetch(path, {
@@ -34,7 +30,6 @@ const getTwitchAccesToken = async () => {
 }
 
 const getTwitchChannel = async  channelName => {
-  console.log('SEARCHING FOR TWITCH CHANNEL')
 
   if(channelName){
     //Get acces token
