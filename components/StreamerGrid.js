@@ -5,6 +5,7 @@ const StreamerGrid = ({ channels }) => {
   //RenderMethod
   const renderGridItem = channel => (
     <div key={channel.id} className={styles.gridItem}>
+      <button>X</button>
       <Image layout='fill' src={channel.thumbnail_url} />
       <div className={styles.gridItemContent}>
         <p>{channel.display_name}</p>
