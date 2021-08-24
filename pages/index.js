@@ -1,15 +1,24 @@
 // Main entry point of your app
+import {useState} from 'react'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
 const Home = () => {
-  // Actions
+  //State
+  const [favoriteChannels, setFavoriteChannels] = useState([])
 
+  // Actions
   const addStreamChannel = event => {
     // Prevent the page from redirecting
     event.preventDefault()
 
     const {value} = event.target.elements.name
+
+    if(value){
+      console.log('Input: ', value)
+      setFavoriteChannels(prevState => [...prevState, value])
+      event.target.elements.name.value = ""
+    }
   }
 
   //Render methods
@@ -32,6 +41,7 @@ const Home = () => {
       </Head>
       <div className={styles.inputContainer}>
         {renderForm()}
+        <div>{favoriteChannels.join(', ')}</div>
       </div>
     </div>
   )
