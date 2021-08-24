@@ -34,9 +34,6 @@ const Home = () => {
 
       const json = await response.json()
 
-     
- 
-
       setFavoriteChannels(prevState => [...prevState, json.channelData])
 
       event.target.elements.name.value = ""
@@ -63,7 +60,7 @@ const Home = () => {
       </Head>
       <div className={styles.inputContainer}>
         {renderForm()}
-        <StreamerGrid channels={favoriteChannels}/>
+        <StreamerGrid channels={favoriteChannels} setChannels={setFavoriteChannels}/>
       </div>
     </div>
   )
