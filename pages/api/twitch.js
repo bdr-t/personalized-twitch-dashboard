@@ -30,7 +30,6 @@ const getTwitchAccesToken = async () => {
 }
 
 const getTwitchChannel = async  channelName => {
-
   if(channelName){
     //Get acces token
     const accesToken = await getTwitchAccesToken()

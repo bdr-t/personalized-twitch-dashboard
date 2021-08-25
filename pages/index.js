@@ -5,13 +5,72 @@ import styles from "../styles/Home.module.css";
 import StreamerGrid from "../components/StreamerGrid";
 
 const Home = () => {
+  let path;
+
   //State
   const [favoriteChannels, setFavoriteChannels] = useState([]);
 
+  //Effects
   useEffect(() => {
-    console.log(favoriteChannels);
-  }, [favoriteChannels]);
+    path = `https://${window.location.hostname}`
+  })
+
+  useEffect(() => {
+    fetchChannels()
+  }, []);
+
   // Actions
+
+  const fetchChannels = async () => {
+    try {
+      //Get keys from db
+      const response = await fetch(`${path}/api/database`, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'GET_CHANNELS',
+          key: 'CHANNELS',
+        })
+      })
+
+      if (response.status === 404) {
+        console.log('Chanels key could not be found')
+      }
+
+      const json = await response.json()
+
+      
+
+      if (json.data) {
+        const channelNames = json.data.split(',')
+
+        //Get twitch data and set in channels State
+        const channelData = []
+
+        for await (let channelName of channelNames) {
+          const channelResp = await fetch(`${path}/api/twitch`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: channelName })
+          })
+
+          const json = await channelResp.json()
+
+          if (json.channelData) {
+            channelData.push(json.channelData)
+          }
+        }
+        setFavoriteChannels(channelData)
+      }
+
+    } catch (error) {
+      console.warn(error.message)
+    }
+  }
+
+
+
   const setChannel = async (channelName) => {
     try {
       //Get all the current streamers names in the list
@@ -21,7 +80,7 @@ const Home = () => {
 
       const streamerList = [...currentStreamers, channelName].join(",");
 
-      const path = `https://${window.location.hostname}`;
+
 
       const response = await fetch(`${path}/api/database`, {
         method: "POST",
@@ -47,8 +106,6 @@ const Home = () => {
 
     if (value) {
       // Call Twitch Search API
-      const path = `https://${window.location.hostname}`;
-
       const response = await fetch(`${path}/api/twitch`, {
         method: "POST",
         headers: {
