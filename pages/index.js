@@ -1,57 +1,87 @@
 // Main entry point of your app
-import { useState, useEffect } from 'react'
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import StreamerGrid from "../components/StreamerGrid"
+import { useState, useEffect } from "react";
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import StreamerGrid from "../components/StreamerGrid";
 
 const Home = () => {
   //State
-  const [favoriteChannels, setFavoriteChannels] = useState([])
+  const [favoriteChannels, setFavoriteChannels] = useState([]);
 
-
-  useEffect(()=>{
-    console.log(favoriteChannels)
-  },[favoriteChannels])
+  useEffect(() => {
+    console.log(favoriteChannels);
+  }, [favoriteChannels]);
   // Actions
-  const addStreamChannel = async event => {
-    // Prevent the page from redirecting
-    event.preventDefault()
+  const setChannel = async (channelName) => {
+    try {
+      //Get all the current streamers names in the list
+      const currentStreamers = favoriteChannels.map((channel) =>
+        channel.display_name.toLowerCase()
+      );
 
-    const { value } = event.target.elements.name
+      const streamerList = [...currentStreamers, channelName].join(",");
+
+      const path = `https://${window.location.hostname}`;
+
+      const response = await fetch(`${path}/api/database`, {
+        method: "POST",
+        body: JSON.stringify({
+          key: "CHANNELS",
+          value: streamerList,
+        }),
+      });
+
+      if (response.status === 200) {
+        console.log(`Set ${channelName} in db`);
+      }
+    } catch (error) {
+      console.warn(error.message);
+    }
+  };
+
+  const addStreamChannel = async (event) => {
+    // Prevent the page from redirecting
+    event.preventDefault();
+
+    const { value } = event.target.elements.name;
 
     if (value) {
-
       // Call Twitch Search API
-      const path = `https://${window.location.hostname}`
+      const path = `https://${window.location.hostname}`;
 
       const response = await fetch(`${path}/api/twitch`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ data: value })
-      })
+        body: JSON.stringify({ data: value }),
+      });
 
-      const json = await response.json()
+      const json = await response.json();
 
-      setFavoriteChannels(prevState => [...prevState, json.channelData])
+      setFavoriteChannels((prevState) => [...prevState, json.channelData]);
 
-      event.target.elements.name.value = ""
+      await setChannel(value);
+      event.target.elements.name.value = "";
     }
-  }
+  };
 
   //Render methods
   const renderForm = () => {
     return (
       <div className={styles.formContainer}>
         <form onSubmit={addStreamChannel}>
-          <input id='name' placeholder='Twitch Channel Name' type='text' required />
-          <button type='sumbit'>Add Streamer</button>
+          <input
+            id="name"
+            placeholder="Twitch Channel Name"
+            type="text"
+            required
+          />
+          <button type="sumbit">Add Streamer</button>
         </form>
-
       </div>
-    )
-  }
+    );
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -60,10 +90,13 @@ const Home = () => {
       </Head>
       <div className={styles.inputContainer}>
         {renderForm()}
-        <StreamerGrid channels={favoriteChannels} setChannels={setFavoriteChannels}/>
+        <StreamerGrid
+          channels={favoriteChannels}
+          setChannels={setFavoriteChannels}
+        />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

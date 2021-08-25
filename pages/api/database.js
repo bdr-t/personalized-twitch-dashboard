@@ -1,6 +1,6 @@
 // These are database actions needed to interact with Replit DB!
 // Feel free to see how this works or how to make it better!
-const DB_URL = process.env.NEXT_PUBLIC_DB_URL
+const DB_URL = process.env.DB_URL
 
 export default async (req, res) => {
   try {
@@ -11,6 +11,7 @@ export default async (req, res) => {
         if (action === 'GET_CHANNELS') {
           const value = await getValue(key)
           if (value) {
+            
             res.status(200).json({ data: value })
           } else {
             res.status(404).send()
@@ -30,8 +31,9 @@ export default async (req, res) => {
             res.status(200).json({ data: valArray.join(",") })
           }
         } else {
+          console.log('SE EJECUTA ESTE CODIGO')
           const success = await setKey(key, value)
-          if (success) {
+          if (success) {     
             res.status(200).send()
           }
         }
@@ -64,6 +66,7 @@ const setKey = async (key, value) => {
 
 const getValue = async key => {
   try {
+    console.log('key', key)
     const result = await fetch(`${DB_URL}/${key}`)
     const textData = await result.text()
 

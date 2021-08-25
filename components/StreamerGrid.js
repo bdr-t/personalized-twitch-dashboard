@@ -19,10 +19,19 @@ const StreamerGrid = ({ channels, setChannels }) => {
     </div>
   )
 
+  const renderNoItems = () => {
+    return (
+      <div className={styles.gridNoItems}>
+        <p> Add a streamer to get Started</p>
+      </div>
+    )
+  }
+
   return (
     <div>
       <h2>{`Bader's Twitch Dashboard 😎`}</h2>
-      {channels.map(renderGridItem)}
+      {channels.length > 0 && channels.map(renderGridItem)}
+      {channels.length === 0 && renderNoItems()}
     </div>
 
   )
